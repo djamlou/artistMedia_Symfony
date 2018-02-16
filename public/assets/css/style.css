@@ -1,0 +1,19 @@
+body{
+    background-color: antiquewhite;
+}
+
+h1{
+    color: #0000F0;
+}
+
+a{
+    text-decoration: none;
+}
+
+.error{
+    color: #AA3333;
+}
+
+hr{
+    border:1px solid gray;
+}

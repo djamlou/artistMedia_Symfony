@@ -1,0 +1,11 @@
+{% extends 'base.html.twig' %}
+{% form_theme artistForm 'bootstrap_3_horizontal_layout.html.twig' %}
+{% block body %}
+    <p>{{ msg }}</p>
+
+    {{ form(artistForm, {'attr': {'novalidate': 'novalidate'}}) }}
+    {{ form_start(artistForm) }}
+    {{ form_widget(artistForm) }}
+    {{ form_end(artistForm) }}
+
+{% endblock %}

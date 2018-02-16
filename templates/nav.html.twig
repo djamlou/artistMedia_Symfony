@@ -1,0 +1,35 @@
+<nav class="navbar navbar-inverse">
+    <div class="container-fluid">
+        <div class="navbar-header">
+            <a class="navbar-brand" href="{{ path('list_route' )}}">Home</a>
+        </div>
+        <div id="navbar" class="navbar-collapse collapse">
+            <ul class="nav navbar-nav">
+                <li class="dropdown">
+                    <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">Rechercher <span class="caret"></span></a>
+                    <ul class="dropdown-menu">
+                        <li><a href="{{ path('search_artist_route') }}"> Un artiste</a></li>
+                        <li><a href="#">Un album</a></li>
+                    </ul>
+                </li>
+                <li>
+                    <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">Ajouter <span class="caret"></span></a>
+                        <ul class="dropdown-menu">
+                            <li><a href={{ path('add_artist_route') }}>Ajouter un artiste</a></li>
+                            <li><a href={{ path('add_album_route') }}>Ajouter un album</a></li>
+                        </ul>
+                </li>
+            </ul>
+            <ul class="nav navbar-nav navbar-right">
+
+                <li>
+                    {% if app.user %}
+                        <a href="#">Déconnexion ({{ app.user.username }})<span class="sr-only">(current)</span></a>
+                    {% else %}
+                        <a href="#">Connexion <span class="sr-only">(current)</span></a>
+                    {% endif %}
+                </li>
+            </ul>
+        </div><!--/.nav-collapse -->
+    </div><!--/.container-fluid -->
+</nav>

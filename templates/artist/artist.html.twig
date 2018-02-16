@@ -1,0 +1,30 @@
+{% extends 'base.html.twig' %}
+{% block body %}
+
+   <h2>Fiche artiste :{{ artist.name | title }}</h2>
+
+    <h4>Genres musicaux :</h4>
+ <ul>
+     {% for genre in artist.genres %}
+      <li>{{ genre.name }}</li>
+     {% endfor %}
+ </ul>
+
+    <hr>
+    <h2>Albums :</h2>
+    {% for album in artist.albums %}
+        <div class="row">
+            <div class="col-md-3"><img src="http://placehold.it/100/b22222/{{ loop.index }}"></div>
+            <div class="col-md-6">
+                <h2>{{ album.title }}</h2>
+                <small>Sortie en :<strong>{{ album.releaseDate }}</strong></small>
+            </div>
+            <div class="col-md-3">
+                <a class="btn btn-info" href="{{ path('album_show_route', {'id':artist.id}) }}">Détail</a>
+                <a class="btn btn-success" href="{{ path('album_edit_route', {'id':artist.id}) }}">Modifier</a>
+                <a class="btn btn-danger" href="{{ path('album_delete_route', {'id':artist.id}) }}">Supprimer</a>
+            </div>
+        </div>
+    {% endfor %}
+
+{% endblock %}

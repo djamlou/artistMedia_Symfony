@@ -1,0 +1,9 @@
+{% extends 'base.html.twig' %}
+{% form_theme albumForm 'bootstrap_3_horizontal_layout.html.twig' %}
+{% block body %}
+    <p>{{ msg }}</p>
+    <h1 class="text-center">Ajout d'un album : </h1>
+    {{ form_start(albumForm) }}
+    {{ form_widget(albumForm) }}
+    {{ form_end(albumForm) }}
+{% endblock %}
