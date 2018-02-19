@@ -1,7 +1,7 @@
 {% extends 'base.html.twig' %}
 {% block body %}
 
-   <h2>Fiche artiste :{{ artist.name | title }}</h2>
+   <h2>Fiche artiste : <span></span>{{ artist.name | title }}<span></span></h2>
 
     <h4>Genres musicaux :</h4>
  <ul>
@@ -20,9 +20,9 @@
                 <small>Sortie en :<strong>{{ album.releaseDate }}</strong></small>
             </div>
             <div class="col-md-3">
-                <a class="btn btn-info" href="{{ path('album_show_route', {'id':artist.id}) }}">Détail</a>
-                <a class="btn btn-success" href="{{ path('album_edit_route', {'id':artist.id}) }}">Modifier</a>
-                <a class="btn btn-danger" href="{{ path('album_delete_route', {'id':artist.id}) }}">Supprimer</a>
+                <a class="btn btn-info" href="{{ path('album_show_route', {'id':album.id}) }}">Détail</a>
+                <a class="btn btn-success" href="{{ path('album_edit_route', {'id':album.id}) }}">Modifier</a>
+                <a class="btn btn-danger" href="{{ path('album_delete_route', {'id':album.id}) }}">Supprimer</a>
             </div>
         </div>
     {% endfor %}

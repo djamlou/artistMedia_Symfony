@@ -108,10 +108,11 @@ return $this->render('artist/addArtist.html.twig', array("artistForm"=>$form->cr
         $form->handleRequest($request);
         if ($form->isSubmitted() && $form->isValid()) {
             $doctrine = $this->getDoctrine()->getRepository(Artist::class);
-            $artist = $doctrine->findOneBy($form['name']->getData());
+            $artist = $doctrine->findOneByName($form['name']->getData());
+            return $this->redirectToRoute('artist_show_route', ['id' => $artist->getId()]);
 
         }
         return $this->render('artist/searchArtist.html.twig', [
-            'searchForm' => $form->createView()], ['id' => $artist->getId()]);
+            'searchForm' => $form->createView()]);
     }
 }

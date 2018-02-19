@@ -1,0 +1,22 @@
+{% extends "base.html.twig" %}
+{% block title %} {{album.title }} - {{ parent() }}{% endblock %}
+
+{% block body %}
+
+    <h1>Fiche album :  {{  album.title | title }} </h1>
+    <small> Sortie en :<strong>{{ album.releaseDate }}</strong></small>
+    <hr>
+
+    <h2>Tracks :</h2>
+    {% for track in album.tracks %}
+        <div class="row">
+            <div class="col-md-3"><img src="http://placehold.it/100/b22222/ {{ loop.index }}"></div>
+            <div class="col-md-7">
+
+                <h2><strong>{{ track.number}}</strong>- {{ track.title }}</h2>
+                <small>Durée :<strong>{{ track.duration | date('i:s') }}</strong></small>
+            </div>
+        </div>
+    {% endfor %}
+
+{% endblock %}

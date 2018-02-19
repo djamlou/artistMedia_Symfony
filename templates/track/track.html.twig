@@ -1,0 +1,10 @@
+{% extends "base.html.twig" %}
+{% block title %} {{track.title }} - {{ parent() }}{% endblock %}
+
+{% block body %}
+
+    <h1>Détail morceau : {{  track.title | title }} </h1>
+    <small> Durée :<strong>{{ track.duration | date('i:s') }}</strong></small>
+
+
+{% endblock %}

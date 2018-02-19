@@ -5,10 +5,12 @@ use Doctrine\Bundle\FixturesBundle\Fixture;
 use Doctrine\Common\Persistence\ObjectManager;
 
 
-
-
 class LoadGenreData extends Fixture
 {
+    public function getOrder()
+    {
+        return 1;
+    }
     public function load(ObjectManager $manager)
     {
         $id3Tags = [
@@ -166,6 +168,7 @@ class LoadGenreData extends Fixture
             $genre = new Genre();
             $genre->setName($id3Tag);
             $manager->persist($genre);
+            $this->addReference('artist_'.$genre->getName(), $genre);
         }
 
         $manager->flush();
