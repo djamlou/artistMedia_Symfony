@@ -33,6 +33,12 @@ class Track{
      * @ORM\Column(type="time")
      */
     private $duration;
+
+    /**
+     * @var string
+     * @ORM\Column(type="text", nullable=true)
+     */
+    private $lyrics;
     /**
      * @var Album
      * @ORM\ManyToOne(targetEntity="App\Entity\Album", inversedBy="tracks")
@@ -97,6 +103,23 @@ class Track{
         $this->duration = $duration;
         return $this;
     }
+
+    /**
+     * @return string
+     */
+    public function getLyrics()
+    {
+        return $this->lyrics;
+    }
+
+    /**
+     * @param string $lyrics
+     */
+    public function setLyrics($lyrics)
+    {
+        $this->lyrics = $lyrics;
+    }
+
 
     /**
      * @return Album

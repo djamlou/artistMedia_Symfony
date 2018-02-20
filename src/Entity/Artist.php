@@ -35,6 +35,12 @@ class Artist {
      */
         private $genres;
 
+    /**
+     * @ORM\Column(type="string", length=255)
+     */
+    private $img;
+
+
     function __construct()
     {
         $this->albums = new ArrayCollection();
@@ -100,6 +106,22 @@ class Artist {
     {
         $this->genres = $genres;
         return $this;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getImg()
+    {
+        return $this->img;
+    }
+
+    /**
+     * @param mixed $img
+     */
+    public function setImg($img)
+    {
+        $this->img = $img;
     }
 
 

@@ -22,6 +22,7 @@ class FormAlbumType extends AbstractType
             ->add('releaseDate', NumberType::class, [
                 'label'=> 'Date de sortie',
             ])
+            ->add("img", TextType::class, ['attr' => ["placeholder" => "Entrez une url d'image"], 'required' => true])
             ->add('artist', EntityType::class, [
                 'label'=>'Artist(s)',
                 'class'=> Artist::class,

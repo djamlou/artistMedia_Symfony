@@ -50,24 +50,31 @@ class AlbumController extends Controller{
     /**
      * @Route("/album/{id}/edit", name="album_edit_route")
      */
-    public function editAction(Album $album, Request $request)
+    public function editAlbum(Album $album, Request $request)
     {
         $form = $this->createForm(FormAlbumType::class, $album);
 
         $form->handleRequest($request);
-        if ($form->isSubmitted() && $form->isValid()) {
-            $doctrine = $this->getDoctrine();
-            $em = $doctrine->getManager();
-            $em->persist($album);
-            $em->flush();
+        $msg = "";
 
-            return $this->redirectToRoute('album_edit_route', ['id' => $album->getArtist()->getId()]);
+        if ($form->isSubmitted()) {
+          if($form->isValid()) {
+
+              $doctrine = $this->getDoctrine();
+              $em = $doctrine->getManager();
+              $em->persist($album);
+              $em->flush();
+              $msg = "Album modifié avec succès";
+              return $this->redirectToRoute('artist_show_route', ['id' => $album->getArtist()->getId()]);
+          }else{
+              $msg = "Vous avez oublié de remplire un champs";
+          }
 
         }
 
-        return $this->render('album/edit.html.twig', [
+        return $this->render('album/addAlbum.html.twig', [
             'album' => $album,
-            'albumForm' => $form->createView()]);
+            'albumForm' => $form->createView(), 'msg' =>$msg]);
     }
 
     /**
@@ -85,7 +92,7 @@ class AlbumController extends Controller{
     /**
      * @Route("/albums/search", name="search_album_route")
      */
-    public function searchArtist(Request $request)
+    public function searchAlbum(Request $request)
     {
         $form = $this->createForm(SearchFormAlbumType::class);
 

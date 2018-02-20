@@ -7,6 +7,7 @@ use Doctrine\ORM\Mapping as ORM;
  * @ORM\Entity()
  */
 class Album {
+
     /**
      * @var int
      *
@@ -38,6 +39,11 @@ class Album {
      * @ORM\ManyToOne(targetEntity="App\Entity\Artist", inversedBy="albums")
      */
     private $artist;
+
+    /**
+     * @ORM\Column(type="string", length=255)
+     */
+    private $img;
 
     /**
      * @return int
@@ -113,5 +119,20 @@ class Album {
         return $this;
     }
 
+    /**
+     * @return mixed
+     */
+    public function getImg()
+    {
+        return $this->img;
+    }
+
+    /**
+     * @param mixed $img
+     */
+    public function setImg($img)
+    {
+        $this->img = $img;
+    }
 
 }

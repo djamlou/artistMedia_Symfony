@@ -6,5 +6,8 @@
     <h1>Détail morceau : {{  track.title | title }} </h1>
     <small> Durée :<strong>{{ track.duration | date('i:s') }}</strong></small>
 
-
+    <h2>Les paroles du morceau : </h2>
+    <textarea class="form-control" rows="15">
+    {{ track.lyrics}}
+    </textarea>
 {% endblock %}

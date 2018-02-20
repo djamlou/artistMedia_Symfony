@@ -17,6 +17,7 @@ class FormArtistType extends AbstractType
     {
 
         $builder->add("name", TextType::class, ['attr' => ["placeholder" => "Entrez un nom"], 'required' => true]);
+        $builder->add("img", TextType::class, ['attr' => ["placeholder" => "Entrez une url d'image"], 'required' => true]);
         $builder->add('genres', EntityType::class, [
             'label'=>'Genre(s)',
             'class'=> Genre::class,

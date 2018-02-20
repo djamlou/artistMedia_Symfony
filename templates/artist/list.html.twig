@@ -8,7 +8,7 @@
 {% for artist in artists %}
     <div class="row">
         <div class="col-md-3">
-            <img src="http://www.poesie-sonore.com/images_cb/francis-cabrel_petite-marie_promo_juke-box_vente-interdite.jpg" width="80" height="60">
+            <img src="{{ artist.img }}" width="80" height="60">
         </div>
     <div class="col-md-4">
     <li><strong>{{ artist.name }}</strong></li>
