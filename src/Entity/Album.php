@@ -45,6 +45,7 @@ class Album {
      */
     private $img;
 
+
     /**
      * @return int
      */
@@ -134,5 +135,6 @@ class Album {
     {
         $this->img = $img;
     }
+
 
 }

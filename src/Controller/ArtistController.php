@@ -43,11 +43,13 @@ return $this->render('artist/addArtist.html.twig', array("artistForm"=>$form->cr
      *@Route("/list", name="list_route")
      */
     public function getArtists(){
+
         $em = $this->getDoctrine()->getRepository(Artist::class);
         $artists = $em->findAll();
         return $this->render('artist/list.html.twig', array(
-            'artists' => $artists,
+            'artists' => $artists
         ));
+
     }
 
     /**
@@ -66,7 +68,7 @@ return $this->render('artist/addArtist.html.twig', array("artistForm"=>$form->cr
         $em = $this->getDoctrine()->getManager();
         $em->remove($artist);
         $em->flush();
-
+        $this->denyAccessUnlessGranted('ROLE_ADMIN', null, 'Unable to access this page!');
         return $this->render('artist/deleteArtist.html.twig', array('artist' => $artist));
     }
 
@@ -83,7 +85,7 @@ return $this->render('artist/addArtist.html.twig', array("artistForm"=>$form->cr
 
             if ($form->isValid()) {
                 $manager = $this->getDoctrine()->getManager();
-                $manager->persist($form->getData());
+                $manager->persist($artist);
                 $manager->flush();
 
                 $msg = "Artist modifié avec succès";
@@ -103,16 +105,17 @@ return $this->render('artist/addArtist.html.twig', array("artistForm"=>$form->cr
      */
     public function searchArtist(Request $request)
     {
-        $form = $this->createForm(SearchFormArtistType::class);
+        $request->request->get('search');
 
-        $form->handleRequest($request);
-        if ($form->isSubmitted() && $form->isValid()) {
+       /* $form = $this->createForm(SearchFormArtistType::class);
+        $form->handleRequest($request);*/
+        if ($_POST->isSubmitted() && $_POST->isValid()) {
             $doctrine = $this->getDoctrine()->getRepository(Artist::class);
-            $artist = $doctrine->findOneByName($form['name']->getData());
+            $artist = $doctrine->findOneByName($_POST['name']->getData());
             return $this->redirectToRoute('artist_show_route', ['id' => $artist->getId()]);
-
         }
-        return $this->render('artist/searchArtist.html.twig', [
-            'searchForm' => $form->createView()]);
+        /*return $this->render('artist/searchArtist.html.twig', [
+            'searchForm' => $form->createView()]);*/
     }
+
 }

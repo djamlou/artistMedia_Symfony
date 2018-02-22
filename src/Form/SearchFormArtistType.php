@@ -6,14 +6,14 @@ use Symfony\Component\Form\Extension\Core\Type\SubmitType;
 use Symfony\Component\Form\Extension\Core\Type\TextType;
 use Symfony\Component\Form\FormBuilderInterface;
 
-
 class SearchFormArtistType extends AbstractType
 {
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
         $builder->add('name', TextType::class, [
             'label'=>'Rechercher',
-            'attr'=> ['maxlength'=> 100],])
+            'attr'=> ['maxlength'=> 100],
+            ])
             ->add('valider', SubmitType::class, array('attr' => array('class' => 'btn btn-primary')));
     }
 
