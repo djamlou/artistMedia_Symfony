@@ -1,8 +1,8 @@
 var statemarque = 0;
 
-function changeColor(){
+function login(){
 
-    var myDiv = document.getElementById('searchArtist');
+    var myDiv = document.getElementById('login');
 
     if(statemarque==0){
 

@@ -23,8 +23,10 @@
             </div>
             <div class="col-md-3">
                 <a class="btn btn-info" href="{{ path('album_show_route', {'id':album.id}) }}">Détail</a>
+                {% if is_granted('ROLE_ADMIN') %}
                 <a class="btn btn-success" href="{{ path('album_edit_route', {'id':album.id}) }}">Modifier</a>
                 <a class="btn btn-danger" href="{{ path('album_delete_route', {'id':album.id}) }}">Supprimer</a>
+               {% endif %}
             </div>
         </div>
     {% endfor %}
