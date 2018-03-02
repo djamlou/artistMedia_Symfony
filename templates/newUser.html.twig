@@ -1,0 +1,11 @@
+{% extends 'base.html.twig' %}
+{% form_theme userForm 'bootstrap_3_horizontal_layout.html.twig' %}
+{% block body %}
+    <p>{{ msg }}</p>
+
+    {{ form(userForm, {'attr': {'novalidate': 'novalidate'}}) }}
+    {{ form_start(userForm) }}
+    {{ form_widget(userForm) }}
+    {{ form_end(userForm) }}
+
+{% endblock %}

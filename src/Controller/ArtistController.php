@@ -3,10 +3,15 @@ namespace App\Controller;
 
 use App\Entity\Artist;
 use App\Form\SearchFormArtistType;
+use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
+use Sensio\Bundle\FrameworkExtraBundle\Configuration\Method;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Symfony\Component\HttpFoundation\Request;
 use App\Form\FormArtistType;
+use Symfony\Component\Serializer\Encoder\JsonEncoder;
+use Symfony\Component\Serializer\Normalizer\ObjectNormalizer;
+use Symfony\Component\Serializer\Serializer;
 
 class ArtistController extends Controller{
 
@@ -14,7 +19,7 @@ class ArtistController extends Controller{
      *@Route("/artist/add", name="add_artist_route")
      */
     public function addArtist(Request $request){
-    $artist = new Artist();
+        $artist = new Artist();
        $form =$this->createForm(FormArtistType::class, $artist);
        $form->handleRequest($request);
 
@@ -49,6 +54,39 @@ return $this->render('artist/addArtist.html.twig', array("artistForm"=>$form->cr
         return $this->render('artist/list.html.twig', array(
             'artists' => $artists
         ));
+
+    }
+
+    /**
+     * @Route("/api/list", name="rest_list")
+     * @Method({"GET"})
+     */
+    public function getArtistREST(Request $request){
+
+        $encoder = new JsonEncoder();
+        $normalizer = new ObjectNormalizer();
+        $serializer = new Serializer(array($normalizer), array($encoder));
+
+        $em = $this->getDoctrine()->getRepository(Artist::class);
+        $artists = $em->findAll();
+
+        foreach ($artists as &$current){
+            $current->setImg($request->getUriForPath('/'.$current->getImg()));
+        }
+        $normalizer->setCircularReferenceHandler(
+            function ($object){
+                return $object->getId();
+            }
+        );
+
+        $options = array( "attributes"=>array('id', 'name', 'img'));
+        $rep = new Response(
+            $serializer->serialize($artists, 'json', $options)
+        );
+        $rep->headers->set('Access-Control-Allow-Origin', '*');
+        return $rep;
+
+
 
     }
 
@@ -100,22 +138,21 @@ return $this->render('artist/addArtist.html.twig', array("artistForm"=>$form->cr
 
     }
 
-    /**
+    /*/**
      * @Route("/artists/search", name="search_artist_route")
      */
-    public function searchArtist(Request $request)
+    /*public function searchArtist(Request $request)
     {
-        $request->request->get('search');
 
-       /* $form = $this->createForm(SearchFormArtistType::class);
-        $form->handleRequest($request);*/
-        if ($_POST->isSubmitted() && $_POST->isValid()) {
+        $form = $this->createForm(SearchFormArtistType::class);
+        $form->handleRequest($request);
+        if ($form->isSubmitted() && $form->isValid()) {
             $doctrine = $this->getDoctrine()->getRepository(Artist::class);
             $artist = $doctrine->findOneByName($_POST['name']->getData());
             return $this->redirectToRoute('artist_show_route', ['id' => $artist->getId()]);
         }
-        /*return $this->render('artist/searchArtist.html.twig', [
-            'searchForm' => $form->createView()]);*/
-    }
+        return $this->render('artist/searchArtist.html.twig', [
+            'searchForm' => $form->createView()]);
+    }*/
 
 }

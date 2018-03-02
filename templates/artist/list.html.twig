@@ -9,23 +9,23 @@
 <ul>
 {% for artist in artists %}
     <div class="row">
-        <div class="col-md-3">
-            <img src="{{ artist.img }}" width="80" height="60">
-        </div>
+    <div class="col-md-3">
+        <img src="{{ artist.img }}" width="80" height="60">
+    </div>
     <div class="col-md-4">
-    <li><strong>{{ artist.name }}</strong></li>
+        <li><strong>{{ artist.name }}</strong></li>
         <small>Nombre d'album en base: <strong>{{ artist.albums | length }}</strong></small>
     </div>
 
     <div class="col-md-4">
         <a class="btn btn-info" href="{{ path('artist_show_route', {'id':artist.id}) }}">Détail</a>
-        {% if is_granted('ROLE_ADMIN') %}
-        <a class="btn btn-success" href="{{ path('artist_edit_route', {'id':artist.id}) }}">Modifier</a>
-        <a class="btn btn-danger" href="{{ path('artist_delete_route', {'id':artist.id}) }}">Supprimer</a>
+        {% if is_granted('ROLE_USER') %}
+            <a class="btn btn-success" href="{{ path('artist_edit_route', {'id':artist.id}) }}">Modifier</a>
+            <a class="btn btn-danger" href="{{ path('artist_delete_route', {'id':artist.id}) }}">Supprimer</a>
         {% endif %}
     </div>
 
-    </div>
+</div>
 {% endfor %}
 
 </ul>

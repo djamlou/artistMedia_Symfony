@@ -17,7 +17,7 @@ Class User implements UserInterface, \Serializable{
     private $id;
 
     /**
-     * @ORM\Column(type="string", length=25, unique=true)
+     * @ORM\Column(type="string", length=25)
      */
     private $username;
 
@@ -39,7 +39,7 @@ Class User implements UserInterface, \Serializable{
     /**
      * @ORM\Column(type="string", length=25)
      */
-    private $role;
+    private $role="ROLE_USER";
 
 
     public function __construct()
@@ -53,6 +53,25 @@ Class User implements UserInterface, \Serializable{
     {
         return $this->username;
     }
+
+    /**
+     * @param mixed $username
+     */
+    public function setUsername($username)
+    {
+        $this->username = $username;
+        return $this;
+    }
+
+    /**
+     * @param mixed $password
+     */
+    public function setPassword($password)
+    {
+        $this->password = $password;
+        return $this;
+    }
+
 
     public function getSalt()
     {
@@ -156,6 +175,7 @@ Class User implements UserInterface, \Serializable{
     public function setRole($role)
     {
         $this->role = $role;
+        return $this;
     }
 
 
