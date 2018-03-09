@@ -5,7 +5,12 @@ use App\Entity\Album;
 use App\Form\FormAlbumType;
 use App\Form\SearchFormAlbumType;
 use Symfony\Component\HttpFoundation\Request;
+use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
+use Sensio\Bundle\FrameworkExtraBundle\Configuration\Method;
+use Symfony\Component\Serializer\Serializer;
+use Symfony\Component\Serializer\Encoder\JsonEncoder;
+use Symfony\Component\Serializer\Normalizer\ObjectNormalizer;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 
 class AlbumController extends Controller{
@@ -45,6 +50,37 @@ class AlbumController extends Controller{
     public function showAlbum(Album $album){
 
         return $this->render('album/album.html.twig', array('album'=>$album));
+    }
+
+    /**
+     * @Route("/api/album", name="rest_album")
+     * @Method({"GET"})
+     */
+    public function getAlbumsREST(Request $request){
+
+        $encoder = new JsonEncoder();
+        $normalizer = new ObjectNormalizer();
+        $serializer = new Serializer(array($normalizer), array($encoder));
+
+        $em = $this->getDoctrine()->getRepository(Album::class);
+        $albums = $em->findAll();
+
+        foreach ($albums as &$current){
+            $current->setImg($request->getUriForPath('/'.$current->getImg()));
+        }
+        $normalizer->setCircularReferenceHandler(
+            function ($object){
+                return $object->getId();
+            }
+        );
+
+        $options = array( "attributes"=>array('id', 'title', 'img', 'releaseDate', 'artistId'));
+        $rep = new Response(
+            $serializer->serialize($albums, 'json', $options)
+        );
+        $rep->headers->set('Access-Control-Allow-Origin', '*');
+        return $rep;
+
     }
 
     /**

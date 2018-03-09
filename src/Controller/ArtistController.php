@@ -61,7 +61,7 @@ return $this->render('artist/addArtist.html.twig', array("artistForm"=>$form->cr
      * @Route("/api/list", name="rest_list")
      * @Method({"GET"})
      */
-    public function getArtistREST(Request $request){
+    public function getArtistsREST(Request $request){
 
         $encoder = new JsonEncoder();
         $normalizer = new ObjectNormalizer();
@@ -79,7 +79,20 @@ return $this->render('artist/addArtist.html.twig', array("artistForm"=>$form->cr
             }
         );
 
-        $options = array( "attributes"=>array('id', 'name', 'img'));
+        $options = array(
+            "attributes"=>array(
+            'id',
+            'name',
+            'img',
+            'genres' => array(
+                "id",
+                "name"
+            ),
+                'albums' => array(
+                        "id"
+                    )
+            )
+        );
         $rep = new Response(
             $serializer->serialize($artists, 'json', $options)
         );

@@ -45,6 +45,27 @@ class Album {
      */
     private $img;
 
+    /**
+     * @ORM\Column(type="integer")
+     */
+    private $artistId;
+
+    /**
+     * @return int
+     */
+    public function getArtistId()
+    {
+        return $this->artistId;
+    }
+
+    /**
+     * @param int $artistId
+     */
+    public function setArtistId($artistId)
+    {
+        $this->artistId = $artistId;
+    }
+
 
     /**
      * @return int

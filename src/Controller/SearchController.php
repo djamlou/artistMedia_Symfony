@@ -21,11 +21,10 @@ class SearchController extends Controller {
         $form->handleRequest($request);
 
         if ($form->isSubmitted() && $form->isValid()) {
-            $doctrine = $this->getDoctrine()->getRepository(Artist::class, Album::class, Track::class);
+            $doctrine = $this->getDoctrine()->getRepository(Artist::class);
             $artist = $doctrine->findOneByName($form['name']->getData());
-            $album = $doctrine->findOneByTitle($form['title']->getData());
-            $track = $doctrine->findOneBytitle($form['title']->getData());
-            return $this->redirectToRoute(['artist_show_route', ['id' => $artist->getId()]],['album_show_route', ['id' =>$album->getId()], ['show_track_route', ['id' =>$track->getId()]]]);
+
+            return $this->redirectToRoute('artist_show_route', ['id' => $artist->getId()]);
 
         }
         return $this->render('artist/searchArtist.html.twig', [

@@ -3,8 +3,13 @@ namespace App\Controller;
 
 use App\Entity\User;
 use App\Form\FormUserType;
+
+use Symfony\Component\Serializer\Serializer;
+use Symfony\Component\Serializer\Encoder\JsonEncoder;
+use Symfony\Component\Serializer\Normalizer\ObjectNormalizer;
 use Symfony\Component\Security\Http\Authentication\AuthenticationUtils;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
+use Sensio\Bundle\FrameworkExtraBundle\Configuration\Method;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpFoundation\Request;
@@ -59,4 +64,84 @@ class UserController extends Controller
         return $this->render('newUser.html.twig', array("userForm"=>$form->createView(),
             'msg'=>$msg));
     }
+
+    /**
+     * @Route("/api/register", name="api_register")
+     * @Method({"OPTIONS", "POST"})
+     */
+
+    public function apiRegister(Request $request, UserPasswordEncoderInterface $encoder ){
+
+        $user = new User();
+        $form = $request->request->all();
+
+        $manager = $this->getDoctrine()->getManager();
+
+        $encoded = $encoder->encodePassword($user, $user->getPassword());
+        $user->setPassword($encoded);
+
+        $manager->persist($form->getData());
+        $manager->flush();
+        // c'est ici qu'on recupere les donnees direction -> bdd
+        $rep = new Response(null);
+        $rep->headers->set('Access-Control-Allow-Origin', '*');
+        $rep->headers->set('Access-Control-Allow-Methods', "GET,POST,PUT,DELETE,OPTIONS");
+        $rep->headers->set('Access-Control-Allow-Headers', "Content-Type");
+        return $rep;
+
+    }
+
+    /**
+     * @Route("/api/auth", name="api_auth")
+     * @Method({"OPTIONS", "POST"})
+     */
+
+    public function apiAuth(Request $request ){
+        $user           = $this->getUser();
+        $encoder        = new JsonEncoder();
+        $normalizer     = new ObjectNormalizer();
+        $serializer     = new Serializer(array($normalizer), array($encoder));
+        // empêche les références circulaires
+        $normalizer->setCircularReferenceHandler(
+            function ($object) {
+                return $object->getId();
+            }
+        );
+        // est là pour définir les attributs exportés en json
+        $options = array(
+            "attributes"=>array("id", "username", "email", "role", "isActive")
+        );
+        $rep = new Response($serializer->serialize($user, 'json', $options));
+        $rep->headers->set('Access-Control-Allow-Origin', '*');
+        $rep->headers->set('Access-Control-Allow-Methods', "GET,POST,PUT,DELETE,OPTIONS");
+        $rep->headers->set('Access-Control-Allow-Headers', "Content-Type");
+        return $rep;
+
+    }
+    /**
+     * @Route("/api/logout", name="api_logout_preflight")
+     * @Method({"OPTIONS", "GET"})
+     */
+    public function apiLogout(Request $request){
+        $user           = $this->getUser();
+        $encoder        = new JsonEncoder();
+        $normalizer     = new ObjectNormalizer();
+        $serializer     = new Serializer(array($normalizer), array($encoder));
+        // empêche les références circulaires
+        $normalizer->setCircularReferenceHandler(
+            function ($object) {
+                return $object->getId();
+            }
+        );
+        // est là pour définir les attributs exportés en json
+        $options = array(
+            "attributes"=>array("id", "username", "email", "role", "isActive")
+        );
+        $rep = new Response($serializer->serialize($user, 'json', $options));
+        $rep->headers->set('Access-Control-Allow-Origin', '*');
+        $rep->headers->set('Access-Control-Allow-Methods', "GET,POST,PUT,DELETE,OPTIONS");
+        $rep->headers->set('Access-Control-Allow-Headers', "Content-Type");
+        return $rep;
+    }
+
 }
