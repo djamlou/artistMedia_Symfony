@@ -4,7 +4,12 @@ namespace App\Controller;
 use App\Entity\Track;
 use App\Form\SearchFormTrackType;
 use Symfony\Component\HttpFoundation\Request;
+use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
+use Sensio\Bundle\FrameworkExtraBundle\Configuration\Method;
+use Symfony\Component\Serializer\Serializer;
+use Symfony\Component\Serializer\Encoder\JsonEncoder;
+use Symfony\Component\Serializer\Normalizer\ObjectNormalizer;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 
 class TrackController extends Controller{
@@ -15,6 +20,36 @@ class TrackController extends Controller{
     public function showAction(Track $track)
     {
         return $this->render('track/track.html.twig',['track' => $track]);
+    }
+
+    /**
+     * @Route("/api/track", name="rest_track")
+     * @Method({"GET"})
+     */
+    public function getTracksREST(Request $request){
+
+        $encoder = new JsonEncoder();
+        $normalizer = new ObjectNormalizer();
+        $serializer = new Serializer(array($normalizer), array($encoder));
+
+        $em = $this->getDoctrine()->getRepository(Track::class);
+        $tracks = $em->findAll();
+
+        $normalizer->setCircularReferenceHandler(
+            function ($object){
+                return $object->getId();
+            }
+        );
+
+        $options = array( "attributes"=>array('id', 'title', 'number',
+            'duration'=>array('timestamp'),
+            'lyrics', 'albumId'));
+        $rep = new Response(
+            $serializer->serialize($tracks, 'json', $options)
+        );
+        $rep->headers->set('Access-Control-Allow-Origin', '*');
+        return $rep;
+
     }
 
     /**

@@ -46,6 +46,28 @@ class Track{
     private $album;
 
     /**
+     * @ORM\Column(type="integer")
+     */
+    private $albumId;
+
+    /**
+     * @return mixed
+     */
+    public function getAlbumId()
+    {
+        return $this->albumId;
+    }
+
+    /**
+     * @param mixed $albumId
+     */
+    public function setAlbumId($albumId)
+    {
+        $this->albumId = $albumId;
+    }
+
+
+    /**
      * @return int
      */
     public function getId()

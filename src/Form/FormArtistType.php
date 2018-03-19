@@ -8,6 +8,7 @@ use Doctrine\ORM\EntityRepository;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\Form\Extension\Core\Type\SubmitType;
 use Symfony\Component\Form\Extension\Core\Type\TextType;
+use Symfony\Component\Form\Extension\Core\Type\FileType;
 
 
 
@@ -17,7 +18,7 @@ class FormArtistType extends AbstractType
     {
 
         $builder->add("name", TextType::class, ['attr' => ["placeholder" => "Entrez un nom"], 'required' => true]);
-        $builder->add("img", TextType::class, ['attr' => ["placeholder" => "Entrez une url d'image"], 'required' => true]);
+        $builder->add("img", FileType::class, array('label' => 'Image(JPG)', "data_class" => null));
         $builder->add('genres', EntityType::class, [
             'label'=>'Genre(s)',
             'class'=> Genre::class,

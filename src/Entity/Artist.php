@@ -37,6 +37,7 @@ class Artist {
 
     /**
      * @ORM\Column(type="string", length=255)
+     * @Assert\File(mimeTypes={ "image/jpeg" })
      */
     private $img;
 
@@ -55,6 +56,15 @@ class Artist {
     {
         return $this->id;
     }
+
+    /**
+     * @param int $id
+     */
+    public function setId($id)
+    {
+        $this->id = $id;
+    }
+
 
 
     /**

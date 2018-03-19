@@ -72,16 +72,22 @@ class UserController extends Controller
 
     public function apiRegister(Request $request, UserPasswordEncoderInterface $encoder ){
 
-        $user = new User();
-        $form = $request->request->all();
+        if($request->getMethod() == "POST"){
+            $user = new User();
+            $form = json_decode($request->getContent());
 
-        $manager = $this->getDoctrine()->getManager();
+            $manager = $this->getDoctrine()->getManager();
 
-        $encoded = $encoder->encodePassword($user, $user->getPassword());
-        $user->setPassword($encoded);
+            $encoded = $encoder->encodePassword($user, $form->password);
+            $user->setPassword($encoded);
+            $user->setUsername($form->username);
+            $user->setEmail($form->email);
 
-        $manager->persist($form->getData());
-        $manager->flush();
+            $manager->persist($user);
+            $manager->flush();
+
+        }
+
         // c'est ici qu'on recupere les donnees direction -> bdd
         $rep = new Response(null);
         $rep->headers->set('Access-Control-Allow-Origin', '*');

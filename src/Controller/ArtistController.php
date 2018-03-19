@@ -2,6 +2,7 @@
 namespace App\Controller;
 
 use App\Entity\Artist;
+use App\Entity\Genre;
 use App\Form\SearchFormArtistType;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
@@ -28,6 +29,18 @@ class ArtistController extends Controller{
        if ($form->isSubmitted()) {
 
            if ($form->isValid()) {
+
+               $file = $artist->getImg();
+               $fileName = $form['name']->getData().'.'.$file->guessExtension();
+                   $file->move(
+
+                   $this->getParameter('img_directory'),
+
+                   $fileName
+               );
+
+               $artist->setImg('assets/img/artist/'.$fileName);
+
                $manager = $this->getDoctrine()->getManager();
                $manager->persist($form->getData());
                $manager->flush();
@@ -43,6 +56,57 @@ class ArtistController extends Controller{
 return $this->render('artist/addArtist.html.twig', array("artistForm"=>$form->createView(),
     'msg'=>$msg));
 }
+
+    /**
+     * @Route("/api/artist/add", name="rest_add")
+     * @Method({"OPTIONS", "POST"})
+     */
+    public function apiAdd(Request $request){
+
+        if( $request->getMethod() === "POST"){
+
+
+
+            //$raw = $request->getContent();
+            //$data = json_decode($raw);
+
+            $artist = new Artist();
+            /*
+            $artist->setName($data->name);
+            $artist->setImg($data->img);
+            */
+            $artist->setName('no_name');
+            $artist->setImg('');
+            $artist->setGenres(array());
+            $artist->setAlbums(array());
+
+            /*
+             *  $file = $artist->getImg();
+            $fileName =$artist->setName($data->name).'.'.$file->guessExtension();
+            $file->move(
+
+                $this->getParameter('img_directory'),
+
+                $fileName
+            );*/
+
+            //$artist->setImg('assets/img/artist/'.$fileName);
+
+            $mgr = $this->getDoctrine()->getManager();
+            $mgr->persist($artist);
+            $mgr->flush();
+
+            $rep = new Response('{"msg":"OK"}');
+
+        }
+        else{
+            $rep = new Response('{"msg":"OK"}');
+        }
+        $rep->headers->set('Access-Control-Allow-Origin', '*');
+        $rep->headers->set('Access-Control-Allow-Methods', "GET,POST,PUT,DELETE,OPTIONS");
+        $rep->headers->set('Access-Control-Allow-Headers', "Content-Type");
+        return $rep;
+    }
 
     /**
      *@Route("/list", name="list_route")
@@ -124,6 +188,35 @@ return $this->render('artist/addArtist.html.twig', array("artistForm"=>$form->cr
     }
 
     /**
+     * @Route("/api/artist/delete/{id}", name="rest_delete")
+     * @Method({"OPTIONS", "DELETE"})
+     */
+    public function apiDelete(Request $request, Artist $artist){
+
+        if( $request->getMethod() === "DELETE"){
+            //$this->denyAccessUnlessGranted('', null, '{"msg":"Unable to access this page!"}');
+            if( $artist !== null ){
+                $id = $artist->getId();
+                $man = $this->getDoctrine()->getManager();
+                $man->remove($artist);
+                $man->flush();
+                $rep = new Response('{"msg":"OK", "id": '.$id.'}');
+            }
+            else{
+                $rep = new Response('{"msg":"no artist for that id"}');
+            }
+
+        }
+        else{
+            $rep = new Response('{"msg":"OK"}');
+        }
+        $rep->headers->set('Access-Control-Allow-Origin', '*');
+        $rep->headers->set('Access-Control-Allow-Methods', "GET,POST,PUT,DELETE,OPTIONS");
+        $rep->headers->set('Access-Control-Allow-Headers', "Content-Type");
+        return $rep;
+
+    }
+    /**
      *@Route("/artist/{id}/edit", name="artist_edit_route")
      */
 
@@ -135,6 +228,18 @@ return $this->render('artist/addArtist.html.twig', array("artistForm"=>$form->cr
         if ($form->isSubmitted()) {
 
             if ($form->isValid()) {
+
+                $file = $artist->getImg();
+                $fileName = $form['name']->getData().'.'.$file->guessExtension();
+                $file->move(
+
+                    $this->getParameter('img_directory'),
+
+                    $fileName
+                );
+
+                $artist->setImg('assets/img/artist/'.$fileName);
+
                 $manager = $this->getDoctrine()->getManager();
                 $manager->persist($artist);
                 $manager->flush();
@@ -151,21 +256,56 @@ return $this->render('artist/addArtist.html.twig', array("artistForm"=>$form->cr
 
     }
 
-    /*/**
+    /**
      * @Route("/artists/search", name="search_artist_route")
      */
-    /*public function searchArtist(Request $request)
+    public function searchArtist(Request $request)
     {
 
         $form = $this->createForm(SearchFormArtistType::class);
         $form->handleRequest($request);
         if ($form->isSubmitted() && $form->isValid()) {
             $doctrine = $this->getDoctrine()->getRepository(Artist::class);
-            $artist = $doctrine->findOneByName($_POST['name']->getData());
+            $artist = $doctrine->findOneByName($form['name']->getData());
             return $this->redirectToRoute('artist_show_route', ['id' => $artist->getId()]);
         }
         return $this->render('artist/searchArtist.html.twig', [
             'searchForm' => $form->createView()]);
-    }*/
+    }
+
+    /**
+     * @Route("/api/genres", name="rest_genres")
+     * @Method({"GET"})
+     */
+    public function apiGenres(Request $request){
+
+        $encoder = new JsonEncoder();
+        $normalizer = new ObjectNormalizer();
+        $serializer = new Serializer(array($normalizer), array($encoder));
+
+        $em = $this->getDoctrine()->getRepository(Genre::class);
+        $genres = $em->findBy(
+            array(),
+            ['name' => 'ASC']
+        );
+
+        $normalizer->setCircularReferenceHandler(
+            function ($object){
+                return $object->getId();
+            }
+        );
+
+        $options = array(
+            "attributes"=>array(
+                'name',
+            )
+        );
+        $rep = new Response(
+            $serializer->serialize($genres, 'json', $options)
+        );
+        $rep->headers->set('Access-Control-Allow-Origin', '*');
+        return $rep;
+
+    }
 
 }

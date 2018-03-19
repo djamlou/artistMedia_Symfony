@@ -41,6 +41,27 @@ Class User implements UserInterface, \Serializable{
      */
     private $role="ROLE_USER";
 
+    /**
+     * @ORM\Column(type="string", length=64)
+     */
+    private $apiKey;
+
+    /**
+     * @return mixed
+     */
+    public function getApiKey()
+    {
+        return $this->apiKey;
+    }
+
+    /**
+     * @param mixed $apiKey
+     */
+    public function setApiKey($apiKey)
+    {
+        $this->apiKey = $apiKey;
+    }
+
 
     public function __construct()
     {

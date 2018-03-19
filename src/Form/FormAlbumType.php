@@ -9,6 +9,7 @@ use Symfony\Component\Form\Extension\Core\Type\NumberType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\Form\Extension\Core\Type\SubmitType;
 use Symfony\Component\Form\Extension\Core\Type\TextType;
+use Symfony\Component\Form\Extension\Core\Type\FileType;
 
 
 class FormAlbumType extends AbstractType
@@ -22,7 +23,7 @@ class FormAlbumType extends AbstractType
             ->add('releaseDate', NumberType::class, [
                 'label'=> 'Date de sortie',
             ])
-            ->add("img", TextType::class, ['attr' => ["placeholder" => "Entrez une url d'image"], 'required' => true])
+            ->add("img", FileType::class, array('label' => 'Image(JPG)'))
             ->add('artist', EntityType::class, [
                 'label'=>'Artist(s)',
                 'class'=> Artist::class,

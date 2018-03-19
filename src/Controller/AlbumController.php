@@ -29,6 +29,19 @@ class AlbumController extends Controller{
             if ($form->isSubmitted()) {
 
                 if ($form->isValid()) {
+
+                    $file = $album->getImg();
+                    $fileName = $form['title']->getData().'.'.$file->guessExtension();
+                    // moves the file to the directory where img are stored
+                    $file->move(
+
+                        $this->getParameter('img_directory2'),
+
+                        $fileName
+                    );
+
+                    $album->setImg('assets/img/album/'.$fileName);
+
                     $manager = $this->getDoctrine()->getManager();
                     $manager->persist($form->getData());
                     $manager->flush();
