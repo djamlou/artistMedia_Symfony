@@ -65,32 +65,27 @@ return $this->render('artist/addArtist.html.twig', array("artistForm"=>$form->cr
 
         if( $request->getMethod() === "POST"){
 
+            $raw = $request->getContent();
+            $data = json_decode($raw);
 
-
-            //$raw = $request->getContent();
-            //$data = json_decode($raw);
+            $fileName =$data->name.'.jpg';
 
             $artist = new Artist();
-            /*
+
             $artist->setName($data->name);
-            $artist->setImg($data->img);
-            */
-            $artist->setName('no_name');
-            $artist->setImg('');
+            $artist->setImg($this->getParameter('img_directory').$fileName);
+
             $artist->setGenres(array());
             $artist->setAlbums(array());
 
-            /*
-             *  $file = $artist->getImg();
-            $fileName =$artist->setName($data->name).'.'.$file->guessExtension();
-            $file->move(
+            if( $data->imgData){
+                $imgdata = base64_decode(preg_replace('#^data:image/\w+;base64,#i', '', $data->imgData));
+                file_put_contents( $artist->getImg(), $imgdata );
+            }
 
-                $this->getParameter('img_directory'),
 
-                $fileName
-            );*/
 
-            //$artist->setImg('assets/img/artist/'.$fileName);
+
 
             $mgr = $this->getDoctrine()->getManager();
             $mgr->persist($artist);
